@@ -17,6 +17,7 @@ Packages required:
 * xterm
   
 `pip install -r requirements.txt`
+
 `chmod +x 6ix`
 
 ## Usage
