@@ -21,7 +21,7 @@ Packages required:
 
 ## Usage
 ```
-usage: 6ix [-h] [-t] [-d] [-i] 
+usage: ./6ix [-h] [-t] [-d] [-i] 
 
 -h			display help message
 -t TARGET		domain controller ip
