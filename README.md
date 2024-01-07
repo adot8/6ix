@@ -28,5 +28,5 @@ usage: ./6ix [-h] [-t] [-d] [-i]
 -d DOMAIN		domain name
 -i INTERFACE		interface
 
-ex: sudo 6ix -t 192.168.1.129 -d WRENCH.local -i eth0
+ex: sudo ./6ix -t 192.168.1.129 -d WRENCH.local -i eth0
 ```
