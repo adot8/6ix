@@ -1,0 +1,6 @@
+xterm
+mitm6
+impacket
+scapy
+twisted
+netifaces

