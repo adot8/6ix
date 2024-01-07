@@ -1,7 +1,6 @@
 # 6ix
-Quick automated script for Active Directory mitm6 and ntlmrelayx attack
+Script for Active Directory mitm6 and ntlmrelayx attack
 
-Made in preperation for the PNPT exam
 
 ## Tools used
 * impacket-netlmrelayx - https://github.com/fortra/impacket
